@@ -50,6 +50,7 @@ task testWeb(){
         println 'Starting Web test'
         javaexec {
             systemProperty 'browserType','chrome'
+            systemProperty 'OSType', 'ios'
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', 'pretty', '--plugin', 'html:reports/html_reports', '--glue', 'stepdefinitions', 'src/test/resources', '--tags', '@navpg']

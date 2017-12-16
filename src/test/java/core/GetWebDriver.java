@@ -12,6 +12,9 @@ public class GetWebDriver {
 
     WebDriver driver;
     String dir = System.getProperty("user.dir");
+    String OSType = System.getProperty("OSType");
+
+
 
     public WebDriver FfoxDriver(){
         System.setProperty("webdriver.gecko.driver", dir + "/drivers/geckodriver");
@@ -27,7 +30,8 @@ public class GetWebDriver {
 
     //Driver for Chrome browser
     public WebDriver ChrDriver(){
-        System.setProperty("webdriver.chrome.driver", dir + "/drivers/chromedriver");
+
+        System.setProperty("webdriver.chrome.driver", dir + "/drivers/chromedriver" + OSType);
         driver = new ChromeDriver();
         return driver;
     }
