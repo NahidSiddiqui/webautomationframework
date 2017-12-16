@@ -1,0 +1,59 @@
+group 'com.test.webautomationframework'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: "com.jfrog.artifactory"
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+
+buildscript {
+    repositories {
+        maven {  url 'http://jcenter.bintray.com' }
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4"
+    }
+}
+
+dependencies {
+
+    // Declare the dependency for your favourite test framework you want to use in your tests.
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.seleniumhq.selenium:selenium-java:3.8.1'
+    compile 'info.cukes:cucumber-java:1.2.+'
+    compile 'info.cukes:cucumber-junit:1.2.+'
+    compile 'info.cukes:cucumber-core:1.2.+'
+    compile 'org.springframework:spring-core:4.2.5.RELEASE'
+    compile 'log4j:log4j:1.2.17'
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+
+task testWeb(){
+    dependsOn assemble, compileTestJava
+
+    doLast{
+        println 'Starting Web test'
+        javaexec {
+            systemProperty 'browserType','chrome'
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--plugin', 'html:reports/html-report/ios', '--glue', 'stepdefinitions', 'src/test/resources', '--tags', '@navpg']
+        }
+    }
+}
+
